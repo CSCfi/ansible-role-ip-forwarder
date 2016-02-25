@@ -1,0 +1,14 @@
+---
+galaxy_info:
+  author: Risto Laurikainen
+  description: An Ansible role for configuring IP forwarding on a machine using iptables and sysctl parameters
+  company: CSC
+  license: MIT
+  min_ansible_version: 2.0
+  platforms:
+  - name: EL
+    versions:
+    - 7
+  categories:
+  - system
+  dependencies: []
