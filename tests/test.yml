@@ -1,0 +1,11 @@
+---
+
+ - hosts: localhost
+   remote_user: root
+   vars:
+     - internal_interface: "eth0"
+     - external_interface: "eth1"
+     - internal_net: "10.0.0.0/28"
+   roles:
+     - ansible-role-ip-forwarder
+...
