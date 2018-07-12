@@ -2,7 +2,8 @@
 - name: Check for masquerading
   shell: firewall-cmd --zone {{ firewalld_masq_zone }} --query-masquerade
   register: masquerade
-  always_run: yes
+  check_mode: no
+  changed_when: False
   failed_when: masquerade.rc >= 2
 
 - name: Add masquerading to zone

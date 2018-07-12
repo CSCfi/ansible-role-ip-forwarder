@@ -5,11 +5,12 @@
 - name: get firewalld state
   shell: firewall-cmd --state
   ignore_errors: true
-  always_run: yes
+  check_mode: no
   register: firewalld_state
+  changed_when: False
 
-- include: iptables.yml
+- import_tasks: iptables.yml
   when: firewalld_state.rc != 0
 
-- include: firewalld.yml
+- import_tasks: firewalld.yml
   when: firewalld_state.rc == 0
