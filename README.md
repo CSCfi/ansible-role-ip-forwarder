@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/CSCfi/ansible-role-ip-forwarder.svg?branch=master)](https://travis-ci.org/CSCfi/ansible-role-ip-forwarder)
+
 # ansible-role-ip-forwarder
 An Ansible role for configuring IP forwarding on a machine using sysctl
 parameters and either direct iptables or firewalld.

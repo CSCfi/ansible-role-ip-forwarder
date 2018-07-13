@@ -1,7 +1,8 @@
 ---
 - name: get iptables rules
   shell: iptables -L; iptables -t nat -L
-  always_run: yes
+  check_mode: no
+  changed_when: False
   register: iptablesrules
 
 - name: allow forwarding traffic in iptables
