@@ -9,3 +9,23 @@
 - name: Add masquerading to zone
   shell: firewall-cmd --zone {{ firewalld_masq_zone }} --add-masquerade --permanent
   when: masquerade.rc == 1
+
+- name: Check for forwarding rule
+  shell:  firewall-cmd --direct --query-rule ipv4 filter FORWARD  0 -i {{ internal_interface }} -o {{ external_interface }} -j ACCEPT
+  check_mode: no
+  changed_when: False
+  register: forward_rule
+  failed_when: forward_rule.rc > 2
+  when:  internal_interface is defined
+
+- name: Set forwarding rule
+  shell:  firewall-cmd --direct --add-rule ipv4 filter FORWARD  0 -i {{ internal_interface }} -o {{ external_interface }} -j ACCEPT
+  when:
+   - internal_interface is defined
+   - forward_rule.rc == 1
+
+- name: Set return traffic
+  shell:  firewall-cmd --direct --add-rule ipv4 filter FORWARD  0 -i {{ external_interface }} -o {{ internal_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
+  when:
+   - internal_interface is defined
+   - forward_rule.rc == 1
