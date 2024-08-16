@@ -25,7 +25,7 @@
    - forward_rule.rc == 1
 
 - name: Set return traffic
-  shell:  firewall-cmd --direct --add-rule ipv4 filter FORWARD  0 -i {{ external_interface }} -o {{ internal_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
+  shell:  firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD  0 -i {{ external_interface }} -o {{ internal_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
   when:
    - internal_interface is defined
    - forward_rule.rc == 1
