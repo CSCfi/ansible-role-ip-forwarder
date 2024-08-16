@@ -11,7 +11,7 @@
   when: masquerade.rc == 1
 
 - name: Check for forwarding rule
-  shell:  firewall-cmd --permanent --direct --query-rule ipv4 filter FORWARD  0 -i {{ internal_interface }} -o {{ external_interface }} -j ACCEPT
+  shell:  firewall-cmd --direct --query-rule ipv4 filter FORWARD  0 -i {{ internal_interface }} -o {{ external_interface }} -j ACCEPT
   check_mode: no
   changed_when: False
   register: forward_rule
@@ -19,12 +19,24 @@
   when:  internal_interface is defined
 
 - name: Set forwarding rule
-  shell:  firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD  0 -i {{ internal_interface }} -o {{ external_interface }} -j ACCEPT
+  shell:  firewall-cmd -direct --add-rule ipv4 filter FORWARD  0 -i {{ internal_interface }} -o {{ external_interface }} -j ACCEPT
   when:
    - internal_interface is defined
    - forward_rule.rc == 1
 
 - name: Set return traffic
+  shell:  firewall-cmd --direct --add-rule ipv4 filter FORWARD  0 -i {{ external_interface }} -o {{ internal_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
+  when:
+   - internal_interface is defined
+   - forward_rule.rc == 1
+
+- name: Set forwarding rule permanent
+  shell:  firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD  0 -i {{ internal_interface }} -o {{ external_interface }} -j ACCEPT
+  when:
+   - internal_interface is defined
+   - forward_rule.rc == 1
+
+- name: Set return traffic permanent
   shell:  firewall-cmd --permanent --direct --add-rule ipv4 filter FORWARD  0 -i {{ external_interface }} -o {{ internal_interface }} -m state --state RELATED,ESTABLISHED -j ACCEPT
   when:
    - internal_interface is defined
