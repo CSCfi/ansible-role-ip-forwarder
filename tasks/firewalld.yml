@@ -7,6 +7,10 @@
   failed_when: masquerade.rc >= 2
 
 - name: Add masquerading to zone
+  shell: firewall-cmd --zone {{ firewalld_masq_zone }} --add-masquerade
+  when: masquerade.rc == 1
+
+- name: Add masquerading to zone permanently
   shell: firewall-cmd --zone {{ firewalld_masq_zone }} --add-masquerade --permanent
   when: masquerade.rc == 1
 
